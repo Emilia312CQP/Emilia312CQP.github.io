@@ -1,0 +1,36 @@
+body {
+    font-size: 14px;
+}
+
+.baseColor {
+    color: #614632
+}
+
+.l {
+    float: left;
+}
+
+.r {
+    float: right;
+}
+
+.clearFix:after {
+    content: "";
+    display: inline-block;
+    clear: both;
+}
+
+.red {
+    color: red;
+}
+
+button {
+    cursor: pointer !important;
+
+
+}
+
+.wrapper {
+    width: 1020px;
+    margin: 0 auto;
+}

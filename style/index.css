@@ -1,0 +1,56 @@
+#top{
+    background: #82C3D5;
+    height: 60px;
+color:#F1EDEA;
+}
+#top .icon-adbddb{
+    color:#C29D9E;
+    font-size: 40px;
+    margin-right: 24px;
+}
+#top .l{ height: 60px;}
+
+
+#top .l:first-child  {
+    width: 400px;
+    display: flex;
+align-items: center;
+
+    font-size: 22px;
+
+}
+#top .r{
+    height: 60px;
+    width: 500px;
+    padding-right: 80px;
+    text-align: right;
+    line-height: 60px;
+    font-size:28px;
+}
+#banner{
+    height: 500px;
+    background: url("../imgs/banner.jfif")  no-repeat ;
+    background-size: 100%;
+}
+#banner .wrapper{
+
+    text-indent: 150px;
+    line-height: 500px;
+}
+#banner img {width: 528px;
+    height: 278px;}
+#bottom{
+    height: 180px;
+background:#82C3D5;}
+#bottom .wrapper{
+    display: flex;
+    color:#F1EDEA;
+    font-size: 20px;
+    font-weight: bold;
+}
+#bottom .wrapper>div{width: 200px;
+    height: 200px;
+    line-height: 200px;
+}
+#bottom .wrapper>div i{margin-right: 20px;}
+#bottom .wrapper>div:not(:last-child){margin-right: 200px ;}
