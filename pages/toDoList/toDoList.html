@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>管理我的任务清单</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #box {
+            width: 600px;
+            height: 600px;
+            margin: 100px 300px;
+
+        }
+
+        button {
+            border: none;
+            outline: none;
+        }
+
+        h5 {
+            color: #333;
+
+        }
+
+        header，nav, main {
+            width: 100%;
+        }
+
+        header {
+            height: 50px;
+            background: rgb(96, 146, 231);
+            line-height: 50px;
+            text-align: center;
+            font-weight: bold;
+            color: white;
+            font-size: 24px;
+        }
+
+        nav {
+            height: 34px;
+            text-align: center;
+            line-height: 34px;
+            background: rgb(104, 104, 104);
+        }
+
+        nav > button {
+            width: 60px;
+            font-size: 12px;
+            height: 22px;
+            padding-bottom: 2px;
+            background: rgb(68, 68, 68);
+            color: white;
+            border-radius: 4px;
+
+
+        }
+
+        nav > button.active {
+            background: white;
+            color: rgb(96, 146, 231);
+        }
+
+        nav > button:first-child {
+            margin-right: 20px;
+        }
+
+        #btn {
+            background: rgb(96, 146, 231);
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            height: 30px;
+            color: white;
+            font-size: 14px;
+            font-weight: bolder;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+
+        p > input, p > textarea {
+            width: 588px;
+            margin-top: 10px;
+            border-radius: 4px;
+            outline: none;
+        }
+        textarea::selection{background: transparent;}
+        main > p {
+            width: 100%;
+        }
+
+        input {
+            height: 28px;
+            border-radius: 0;
+        }
+
+        main {
+
+            padding: 10px 0 60px;
+            background: rgb(224, 224, 224);
+            height: 300px;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        main ul li {
+            margin-bottom: 20px;
+        }
+
+        li > div {
+            display: flex;
+            justify-content: space-between
+        }
+
+        main > div {
+            width: 590px;
+            margin: 0 auto;
+        }
+
+        button.complete, button.del {
+            width: 60px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background: rgb(96, 146, 231);
+            color: white;
+            font-size: 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        button.del {
+            background: rgb(226, 61, 53);
+        }
+    </style>
+</head>
+<body>
+
+<div id="box">
+    <header>任务清单</header>
+    <nav>
+        <button class="duty active">任务列表</button>
+        <button class="">添加任务</button>
+    </nav>
+    <main>
+        <div style="display:block " class="list">
+
+
+        </div>
+
+        <div style="display: none">
+            <h5>内容</h5>
+            <p><textarea id="content" cols="24" rows="10"></textarea></p>
+            <h5>日期</h5>
+            <p><input type="date"></p>
+            <button id="btn">提&emsp;交</button>
+        </div>
+    </main>
+</div>
+
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/template.js"></script>
+<script id="list" type="text/html">
+    {{if arr.length===0}}
+    <p style="color: rgb(226, 61, 53);font-weight: bold;text-indent: 10px;">当前暂时没有任务哦！</p>
+    {{else}}
+    {{each arr as v i}}
+    <ul>
+        <li>
+            <div>
+                <div>任务{{i+1}}:&emsp;{{v.content}}&emsp;</div>
+                <div><span class="date">{{v.date}}</span>
+                    <button class="complete">完成任务</button>
+                    <button class="del">删除任务</button>
+                </div>
+            </div>
+        </li>
+    </ul>
+    {{/each}}
+    {{/if}}
+
+
+</script>
+
+<script>
+    let data = {
+        arr: []
+    };
+    let str = '';
+    /*初始化data*/
+    conductData();
+    /*根据data，使用artTemplate渲染dom*/
+    addUi(data);
+
+    /*给提交按钮绑定单击事件，将添加的任务增加到arr列表中*/
+    $('#btn').click(function () {
+        data.arr.push({content: $('#content').val(), date: $('input').val()});
+        addLocal(JSON.stringify(data.arr));
+        /*初始化data*/
+        conductData();
+        /*根据data，使用artTemplate渲染dom*/
+        addUi(data);
+        /*清空当前表单*/
+        clear();
+        /*跳转页面至任务列表*/
+        $('.list').css('display', 'block').siblings('div').css('display', 'none');
+        $('.duty').addClass('active').siblings().removeClass('active');
+    });
+
+    /*增加本地存储的函数*/
+    function addLocal(obj) {
+        window.localStorage.setItem('arr', obj);
+    }
+
+    $('nav>button').click(function () {
+        let index = $(this).index();
+        /*当前按钮激活，其他按钮不激活*/
+        $(this).addClass('active').siblings('button').removeClass('active');
+        //根据当前按钮的dom序号显示相应的div
+        $('main>div').eq(index).css('display', 'block').siblings('div').css('display', 'none');
+
+    });
+
+    /*根据当前的arr列表来渲染视图的函数*/
+    function addUi(data) {
+        str = template('list', data);
+        $('.list').html(str)
+    }
+
+    /*根据当前本地存储初始化data的函数*/
+
+    function conductData() {
+        if (window.localStorage.getItem('arr')) {
+            data.arr = JSON.parse(window.localStorage.getItem('arr'));
+        }
+        else{data.arr=[];}
+        return data;
+    }
+
+    /*通过事件委派来设置删除当前任务的函数*/
+    $('.list').on('click','.del',function () {
+        let index=$(this).closest('li').index();
+        let arrNew=JSON.parse(window.localStorage.getItem('arr'));
+        //删除对应的任务，重新覆盖本地存储
+        arrNew.splice(index,1);
+        window.localStorage.setItem('arr',JSON.stringify(arrNew));
+        /*重新生成data*/
+        conductData();
+        addUi(data);
+    });
+    /*清空表单的函数*/
+    function clear() {
+        $('#content').val('');
+    }
+
+</script>
+
+</body>
+</html>

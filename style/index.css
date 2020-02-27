@@ -19,6 +19,7 @@ align-items: center;
     font-size: 22px;
 
 }
+
 #top .r{
     height: 60px;
     width: 500px;
@@ -26,6 +27,12 @@ align-items: center;
     text-align: right;
     line-height: 60px;
     font-size:28px;
+}
+/*===========功能列导航========*/
+#nav{
+    height: 30px;
+
+
 }
 #banner{
     height: 600px;
