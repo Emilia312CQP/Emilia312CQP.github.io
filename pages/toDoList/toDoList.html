@@ -131,7 +131,7 @@
             margin: 0 auto;
         }
 
-        button.complete, button.del {
+        button.complete, button.notYet, button.del {
             width: 60px;
             height: 30px;
             line-height: 30px;
@@ -203,18 +203,23 @@
 </script>
 <!--已完成页面的视图-->
 <script id="doneList" type="text/html">
-    <ul> {{each doneArr as v i}}
+    <ul>
+        {{if doneArr.length===0}}
+        <p style="color: rgb(226, 61, 53);font-weight: bold;text-indent: 10px;">你比较懒，当前没有已完成任务哦...o(∩_∩)o </p>
+        {{else}}
+        {{each doneArr as v i}}
         <li>
             <div>
                 <div>任务{{i+1}}：&emsp; {{v.content}}</div>
                 <div>{{v.date}}
+                    <button class="notYet">暂未完成</button>
                     <button class="del">删除任务</button>
                 </div>
             </div>
         </li>
 
         {{/each}}
-
+        {{/if}}
 
     </ul>
 
@@ -227,12 +232,7 @@
         doneArr: []
     };
     let str = '';
-    /*初始化data*/
-    conductData("arr", "arr");
-    conductData("doneArr", "doneList");
-    /*根据data，使用artTemplate渲染dom*/
-    addUi(data, 'list', '.list');
-    addUi(data, 'doneList', '.doneList');
+    makeDataUI();
     /*给提交按钮绑定单击事件，将添加的任务增加到arr列表中*/
     $('#btn').click(function (e) {
         if ($('input').val()) {
@@ -247,12 +247,9 @@
             /*跳转页面至任务列表*/
             $('.list').css('display', 'block').siblings('div').css('display', 'none');
             $('.duty').addClass('active').siblings().removeClass('active');
-        }
-        else{
+        } else {
             e.preventDefault();
         }
-
-
     });
 
     /*增加本地存储的函数，参数1：本地存储的变量名name，参数2：需要放入存储的变量obj*/
@@ -276,7 +273,6 @@
     }
 
     /*根据当前本地存储初始化data的函数，参数1：js中的数据；参数2：本地存储的变量名*/
-
     function conductData(dataName, localName) {
         if (window.localStorage.getItem(localName)) {
             data[dataName] = JSON.parse(window.localStorage.getItem(localName));
@@ -302,17 +298,16 @@
         addUi(data, 'list', '.list');
     });
 
-    /*将删除当前未完成的任务封装成一个函数,参数1：当前被删除的序列号，参数2：是删除还是保存至已完成,参数3：本地存储的名字*/
-    function delDuty(index, ans, localName) {
+    /*将删除当前未完成的任务封装成一个函数,参数1：当前被删除的序列号，参数2：是删除还是保存至已完成,参数3：本地存储的名字,参数4：要增加到哪个数组的名字*/
+    function delDuty(index, ans, localName, arrName) {
         let arrNew = JSON.parse(window.localStorage.getItem(localName));
         //删除对应的任务，重新覆盖本地存储
         if (ans) {
-            data.doneArr.push(arrNew.splice(index, 1)[0])
+            data[arrName].push(arrNew.splice(index, 1)[0])
         } else {
             arrNew.splice(index, 1)
         }
         window.localStorage.setItem(localName, JSON.stringify(arrNew));
-
     }
 
     /*清空表单的函数*/
@@ -323,9 +318,27 @@
     /*给“已完成”按钮添加事件*/
     $('.list').on('click', '.complete', function () {
         let index = $(this).closest('li').index();
-        delDuty(index, true, 'arr');//删除未完成任务，添加至已完成任务列表中
+        delDuty(index, true, 'arr', 'doneArr');//删除未完成任务，添加至已完成任务列表中
         addLocal('doneList', JSON.stringify(data.doneArr)); //将已完成添加至名为doneList的本地存储中
+        makeDataUI();
 
+    });
+    $('.doneList').on('click', '.del', function () {
+        let index = $(this).closest('li').index();
+        delDuty(index, false, 'doneList');
+        conductData("doneArr", "doneList");
+        addUi(data, 'doneList', '.doneList');  //已完成列表
+    });
+    /*给暂未完成绑定事件*/
+    $('.doneList').on('click', '.notYet', function () {
+        let index = $(this).closest('li').index();
+        delDuty(index, true, 'doneList', 'arr');//删除已完成，添加至未完成任务列表中
+        addLocal('arr', JSON.stringify(data.arr)); //重新渲染未完成的任务列表
+        makeDataUI();
+
+    })
+
+    function makeDataUI() {
         /*初始化data*/
         conductData("arr", "arr");
         conductData("doneArr", "doneList");
@@ -333,14 +346,7 @@
         /*根据data，使用artTemplate渲染dom*/
         addUi(data, 'list', '.list');  //未完成列表
         addUi(data, 'doneList', '.doneList');  //已完成列表
-
-    })
-    $('.doneList').on('click', '.del', function () {
-        let index = $(this).closest('li').index();
-        delDuty(index, false, 'doneList');
-        conductData("doneArr", "doneList");
-        addUi(data, 'doneList', '.doneList');  //已完成列表
-    })
+    }
 </script>
 
 </body>
