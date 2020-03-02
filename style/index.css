@@ -10,12 +10,18 @@ body {
 
 @font-face {
     font-family: "title";
+
     src: url("../src/fonts/cute.ttf") format('truetype');
 }
 
 @font-face {
     font-family: 'icon';
-    src: url("../src/icons/iconfont.ttf") format('truetype');
+    src: url('../src/icons/iconfont.eot'); /* IE9+ */
+    src: url('../src/icons/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('../src/icons/iconfont.ttf') format('woff'), /* chrome、firefox */
+    url('../src/icons/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+    url('../src/icons/iconfont.svg#fontname') format('svg'); /* iOS 4.1- */
+
 }
 
 #top .icon {
