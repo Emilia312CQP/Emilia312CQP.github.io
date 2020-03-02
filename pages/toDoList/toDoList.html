@@ -65,6 +65,7 @@
         }
 
         nav > button.active {
+
             background: white;
             color: rgb(96, 146, 231);
         }
@@ -149,6 +150,7 @@
         button.del {
             background: rgb(226, 61, 53);
         }
+
     </style>
 </head>
 <body>
@@ -217,10 +219,8 @@
                 </div>
             </div>
         </li>
-
         {{/each}}
         {{/if}}
-
     </ul>
 
 
@@ -281,10 +281,11 @@
         }
         return data;
     }
-
+/*==================未完成的任务列表===================*/
     /*通过事件委派来设置删除当前任务的函数*/
     $('.list').on('click', '.del', function () {
-        let index = $(this).closest('li').index();
+        let index = $(this).closest('li').index('li');
+
         delDuty(index, false, 'arr');
         /*
         let arrNew=JSON.parse(window.localStorage.getItem('arr'));
@@ -298,8 +299,43 @@
         addUi(data, 'list', '.list');
     });
 
+    /*清空表单的函数*/
+    function clear() {
+        $('#content').val('');
+        $('input').val();
+    }
+    /*给“已完成”按钮添加事件*/
+    $('.list').on('click', '.complete', function () {
+        let index = $(this).closest('li').index('li');
+        delDuty(index, true, 'arr', 'doneArr');//删除未完成任务，添加至已完成任务列表中
+        addLocal('doneList', JSON.stringify(data.doneArr)); //将已完成添加至名为doneList的本地存储中
+        makeDataUI();
+
+    });
+
+    /*=================已完成的任务列表================*/
+    /*给完成的任务列表添加删除任务的事件*/
+    $('.doneList').on('click', '.del', function () {
+
+        let index = $(this).closest('li').index( );
+
+        delDuty(index, false, 'doneList');
+        conductData("doneArr", "doneList");
+        addUi(data, 'doneList', '.doneList');  //已完成列表
+    });
+    /*给取消完成绑定事件*/
+    $('.doneList').on('click', '.notYet', function () {
+        let index = $(this).closest('li').index( );
+        delDuty(index, true, 'doneList', 'arr');//删除已完成，添加至未完成任务列表中
+        addLocal('arr', JSON.stringify(data.arr)); //重新渲染未完成的任务列表
+        makeDataUI();
+
+    });
+
+
     /*将删除当前未完成的任务封装成一个函数,参数1：当前被删除的序列号，参数2：是删除还是保存至已完成,参数3：本地存储的名字,参数4：要增加到哪个数组的名字*/
     function delDuty(index, ans, localName, arrName) {
+console.log(index)
         let arrNew = JSON.parse(window.localStorage.getItem(localName));
         //删除对应的任务，重新覆盖本地存储
         if (ans) {
@@ -310,33 +346,10 @@
         window.localStorage.setItem(localName, JSON.stringify(arrNew));
     }
 
-    /*清空表单的函数*/
-    function clear() {
-        $('#content').val('');
-    }
 
-    /*给“已完成”按钮添加事件*/
-    $('.list').on('click', '.complete', function () {
-        let index = $(this).closest('li').index();
-        delDuty(index, true, 'arr', 'doneArr');//删除未完成任务，添加至已完成任务列表中
-        addLocal('doneList', JSON.stringify(data.doneArr)); //将已完成添加至名为doneList的本地存储中
-        makeDataUI();
 
-    });
-    $('.doneList').on('click', '.del', function () {
-        let index = $(this).closest('li').index();
-        delDuty(index, false, 'doneList');
-        conductData("doneArr", "doneList");
-        addUi(data, 'doneList', '.doneList');  //已完成列表
-    });
-    /*给暂未完成绑定事件*/
-    $('.doneList').on('click', '.notYet', function () {
-        let index = $(this).closest('li').index();
-        delDuty(index, true, 'doneList', 'arr');//删除已完成，添加至未完成任务列表中
-        addLocal('arr', JSON.stringify(data.arr)); //重新渲染未完成的任务列表
-        makeDataUI();
 
-    })
+
 
     function makeDataUI() {
         /*初始化data*/
