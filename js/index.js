@@ -11,8 +11,8 @@ $(function () {
 
 
     });
-    $('ul').on('mouseleave', function ( ) {
-      $(this).css('display','none');
+    $('#nav>.wrapper>div').on('mouseleave', function ( ) {
+      $(this).find('ul').fadeOut('slow');
 
     })
 

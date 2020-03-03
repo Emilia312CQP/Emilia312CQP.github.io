@@ -3,16 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>管理我的任务清单</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <style>
         * {
             margin: 0;
             padding: 0;
         }
 
-        #box {
-            width: 600px;
-            height: 600px;
-            margin: 100px 300px;
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            letter-spacing: 2px;
 
         }
 
@@ -31,20 +37,21 @@
         }
 
         header {
-            height: 50px;
+            height: 16%;
             background: rgb(96, 146, 231);
-            line-height: 50px;
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             font-weight: bold;
             color: white;
-            font-size: 24px;
+            font-size: 30px;
         }
 
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 34px;
+            height: 10%;
             text-align: center;
             line-height: 34px;
             background: rgb(104, 104, 104);
@@ -52,16 +59,14 @@
         }
 
         nav > button {
-            width: 80px;
-            font-size: 12px;
-            height: 22px;
+            width: 120px;
+            font-size: 18px;
+            height: 40px;
             padding-bottom: 2px;
             background: rgb(68, 68, 68);
             color: white;
             border-radius: 4px;
             cursor: pointer;
-
-
         }
 
         nav > button.active {
@@ -88,7 +93,7 @@
         }
 
         p > input, p > textarea {
-            width: 588px;
+            width: 100%;
             margin-top: 10px;
             border-radius: 4px;
             outline: none;
@@ -98,9 +103,7 @@
             background: transparent;
         }
 
-        main > p {
-            width: 100%;
-        }
+
 
         input {
             height: 28px;
@@ -108,11 +111,12 @@
         }
 
         main {
-
-            padding: 10px 0 60px;
+box-sizing: border-box;
+            padding: 10px 20px 60px;
             background: rgb(224, 224, 224);
-            height: 300px;
+            height: 74%;
         }
+
 
         ul {
             list-style: none;
@@ -128,10 +132,10 @@
         }
 
         main > div {
-            width: 590px;
+            width:  100%;
             margin: 0 auto;
         }
-
+main>div:nth-child(2){width: 50%;}
         button.complete, button.notYet, button.del {
             width: 60px;
             height: 30px;
@@ -155,31 +159,31 @@
 </head>
 <body>
 
-<div id="box">
-    <header>任务清单</header>
-    <nav>
-        <button class="duty active">任务列表</button>
-        <button class="">添加任务</button>
-        <button class="done">已完成任务</button>
-    </nav>
-    <main>
-        <div style="display:block " class="list">
+
+<header>任务清单</header>
+<nav>
+    <button class="duty active">任务列表</button>
+    <button class="">添加任务</button>
+    <button class="done">已完成任务</button>
+</nav>
+<main>
+    <div style="display:block " class="list">
 
 
-        </div>
+    </div>
 
-        <div style="display: none">
-            <h5>内容</h5>
-            <p><textarea id="content" cols="24" rows="10"></textarea></p>
-            <h5>日期</h5>
-            <p><input type="date"></p>
-            <button id="btn">提&emsp;交</button>
-        </div>
-        <div style="display: none" class="doneList">
+    <div style="display: none">
+        <h5>内容</h5>
+        <p><textarea id="content" cols="24" rows="10"></textarea></p>
+        <h5>日期</h5>
+        <p><input type="date"></p>
+        <button id="btn">提&emsp;交</button>
+    </div>
+    <div style="display: none" class="doneList">
 
-        </div>
-    </main>
-</div>
+    </div>
+</main>
+
 
 <script src="../../js/jquery.min.js"></script>
 <script src="../../js/template.js"></script>
@@ -281,7 +285,8 @@
         }
         return data;
     }
-/*==================未完成的任务列表===================*/
+
+    /*==================未完成的任务列表===================*/
     /*通过事件委派来设置删除当前任务的函数*/
     $('.list').on('click', '.del', function () {
         let index = $(this).closest('li').index('li');
@@ -304,6 +309,7 @@
         $('#content').val('');
         $('input').val();
     }
+
     /*给“已完成”按钮添加事件*/
     $('.list').on('click', '.complete', function () {
         let index = $(this).closest('li').index('li');
@@ -317,7 +323,7 @@
     /*给完成的任务列表添加删除任务的事件*/
     $('.doneList').on('click', '.del', function () {
 
-        let index = $(this).closest('li').index( );
+        let index = $(this).closest('li').index();
 
         delDuty(index, false, 'doneList');
         conductData("doneArr", "doneList");
@@ -325,7 +331,7 @@
     });
     /*给取消完成绑定事件*/
     $('.doneList').on('click', '.notYet', function () {
-        let index = $(this).closest('li').index( );
+        let index = $(this).closest('li').index();
         delDuty(index, true, 'doneList', 'arr');//删除已完成，添加至未完成任务列表中
         addLocal('arr', JSON.stringify(data.arr)); //重新渲染未完成的任务列表
         makeDataUI();
@@ -335,7 +341,7 @@
 
     /*将删除当前未完成的任务封装成一个函数,参数1：当前被删除的序列号，参数2：是删除还是保存至已完成,参数3：本地存储的名字,参数4：要增加到哪个数组的名字*/
     function delDuty(index, ans, localName, arrName) {
-console.log(index)
+        console.log(index)
         let arrNew = JSON.parse(window.localStorage.getItem(localName));
         //删除对应的任务，重新覆盖本地存储
         if (ans) {
@@ -345,10 +351,6 @@ console.log(index)
         }
         window.localStorage.setItem(localName, JSON.stringify(arrNew));
     }
-
-
-
-
 
 
     function makeDataUI() {
