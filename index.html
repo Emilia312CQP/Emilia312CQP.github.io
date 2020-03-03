@@ -12,7 +12,42 @@
     <link rel="stylesheet" href="style/common.css">
     <link rel="stylesheet" href="style/index.css">
     <style>
+        @font-face {
+            font-family: "title";
 
+            src: url("./src/fonts/cute.ttf") format('truetype');
+        }
+        @font-face {
+            font-family: 'icon';
+            src: url('./src/icons/iconfont.eot'); /* IE9+ */
+            src: url('./src/icons/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+            url('./src/icons/iconfont.ttf') format('woff'), /* chrome、firefox */
+            url('./src/icons/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+            url('./src/icons/iconfont.svg#fontname') format('svg'); /* iOS 4.1- */
+
+        }
+        .icon {
+            font-family: 'icon';
+        }#top .icon {
+             font-family: 'icon';
+             position: absolute;
+             left: -68px;
+             top: -40px;
+             font-size: 42px;
+
+             color: rgb(247, 153, 159);
+         }
+        #top {
+
+              height: 90px;
+              text-align: center;
+              line-height: 90px;
+              letter-spacing: 2px;
+              font-family: "title";
+              color: rgb(162, 201, 200);
+              text-shadow: 2px 2px 2px #969896;
+
+          }
     </style>
 </head>
 <body>
