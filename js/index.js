@@ -13,7 +13,6 @@ $(function () {
     });
     $('#nav>.wrapper>div').on('mouseleave', function ( ) {
       $(this).find('ul').fadeOut('slow');
-
     })
 
 
